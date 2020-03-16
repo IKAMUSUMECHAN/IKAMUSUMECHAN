@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.FactoryDao">
+    <resultMap id="factoryMap" type="com.mall.bean.Factory">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="detail" column="detail"/>
+        <result property="factoryadmin" column="factoryadmin"/>
+        <result property="factorypassword" column="factorypassword"/>
+        <result property="factoryphonenumber" column="factoryphonenumber"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="factoryMap">
+        SELECT * FROM factory
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM factory
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="factoryMap" parameterType="java.lang.Long">
+        SELECT * FROM factory WHERE id=#{id}
+    </select>
+
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO factory (name,detail,factoryadmin,factorypassword,factoryphonenumber) VALUES (#{name},#{detail},#{factoryadmin},#{factorypassword},#{factoryphonenumber})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM factory WHERE id=#{id}
+        ]]>
+    </delete>
+    <!-- 商铺登录 -->
+    <select id="factorylogin" resultMap="factoryMap" parameterType="java.lang.String">
+        SELECT * FROM factory WHERE factoryphonenumber=#{phonenum}
+    </select>
+
+    <update id="update">
+        update factory
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">name=#{name},</if>
+            <if test="detail!=null">detail=#{detail},</if>
+            <if test="factoryadmin!=null">factoryadmin=#{factoryadmin},</if>
+            <if test="factorypassword!=null">factorypassword=#{factorypassword},</if>
+            <if test="factoryphonenumber!=null">factoryphonenumber=#{factoryphonenumber},</if>
+        </trim>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+</mapper>

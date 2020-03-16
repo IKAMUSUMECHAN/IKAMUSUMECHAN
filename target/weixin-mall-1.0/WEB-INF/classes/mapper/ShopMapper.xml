@@ -1,0 +1,68 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.ShopDao">
+    <resultMap id="shopMap" type="com.mall.bean.Shop">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="detail" column="detail"/>
+        <result property="shopadmin" column="shopadmin"/>
+        <result property="shoppassword" column="shoppassword"/>
+        <result property="shopphonenumber" column="shopphonenumber"/>
+        <result property="shopzhuangtai" column="shopzhuangtai"/>
+        <result property="shopxing" column="shopxing"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="shopMap">
+        SELECT * FROM shop
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM shop
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="shopMap" parameterType="java.lang.Long">
+        SELECT * FROM shop WHERE id=#{id}
+    </select>
+
+    <select id="getshopbygid" resultMap="shopMap" parameterType="java.lang.Long">
+        SELECT * FROM shop WHERE id IN (SELECT s_id FROM goods WHERE g_id=#{gid})
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO shop (name,detail,shopadmin,shoppassword,shopphonenumber,shopzhuangtai,shopxing) VALUES (#{name},#{detail},#{shopadmin},#{shoppassword},#{shopphonenumber},#{shopzhuangtai},#{shopxing})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM shop WHERE id=#{id}
+        ]]>
+    </delete>
+    <!-- 商铺登录 -->
+    <select id="shoplogin" resultMap="shopMap" parameterType="java.lang.String">
+        SELECT * FROM shop WHERE shopphonenumber=#{phonenum}
+    </select>
+
+    <update id="update">
+        update shop
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">name=#{name},</if>
+            <if test="detail!=null">detail=#{detail},</if>
+            <if test="shopadmin!=null">shopadmin=#{shopadmin},</if>
+            <if test="shoppassword!=null">shoppassword=#{shoppassword},</if>
+            <if test="shopphonenumber!=null">shopphonenumber=#{shopphonenumber},</if>
+            <if test="shopzhuangtai!=null">shopzhuangtai=#{shopzhuangtai},</if>
+            <if test="shopxing!=null">shopxing=#{shopxing},</if>
+        </trim>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+</mapper>

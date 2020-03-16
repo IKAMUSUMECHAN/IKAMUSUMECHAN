@@ -1,0 +1,65 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.UserDao">
+    <resultMap id="userMap" type="com.mall.bean.User">
+        <id property="userid" column="userid"/>
+        <result property="username" column="username"/>
+        <result property="userphonenum" column="userphonenum"/>
+        <result property="userpassword" column="userpassword"/>
+        <result property="usernickname" column="usernickname"/>
+        <result property="userwxnum" column="userwxnum"/>
+        <result property="userportrait" column="userportrait"/>
+        <result property="userstate" column="userstate"/>
+        <result property="token" column="token"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="userMap">
+        SELECT * FROM user
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM user
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="userMap" parameterType="java.lang.Long">
+        SELECT * FROM user WHERE id=#{id}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO user (username,userphonenum,userpassword,usernickname,userwxnum,userportrait,userstate,token) VALUES (#{username},#{userphonenum},#{userpassword},#{usernickname},#{userwxnum},#{userportrait},#{userstate},#{token})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM user WHERE id=#{id}
+        ]]>
+    </delete>
+    <!-- 用户登录 -->
+    <select id="userlogin" resultMap="userMap" parameterType="java.lang.Long">
+        SELECT * FROM user WHERE userphonenum=#{userphonenum}
+    </select>
+
+    <update id="update">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">name=#{name},</if>
+            <if test="detail!=null">detail=#{detail},</if>
+            <if test="useradmin!=null">useradmin=#{useradmin},</if>
+            <if test="userpassword!=null">userpassword=#{userpassword},</if>
+            <if test="userphonenumber!=null">userphonenumber=#{userphonenumber},</if>
+            <if test="userzhuangtai!=null">userzhuangtai=#{userzhuangtai},</if>
+            <if test="userxing!=null">userxing=#{userxing},</if>
+        </trim>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+</mapper>

@@ -1,0 +1,98 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.OrderforuserDao">
+    <resultMap id="orderforuserMap" type="com.mall.bean.Orderforuser">
+        <id property="orderid" column="orderid"/>
+        <result property="ordernumber" column="ordernumber"/>
+        <result property="userid" column="userid"/>
+        <result property="shopid" column="shopid"/>
+        <result property="address" column="address"/>
+        <result property="orderstate" column="orderstate"/>
+        <result property="ordertime" column="ordertime"/>
+        <result property="orderprice" column="orderprice"/>
+        <result property="ordergoodsnum" column="ordergoodsnum"/>
+        <result property="ordername" column="ordername"/>
+        <result property="allgoodsid" column="allgoodsid"/>
+        <result property="orderpic" column="orderpic"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+        INSERT INTO orderforuser (ordernumber,userid,shopid,address,orderstate,ordertime,orderprice,ordergoodsnum,ordername,allgoodsid,orderpic) VALUES (#{ordernumber},#{userid},#{shopid},#{address},#{orderstate},#{ordertime},#{orderprice},#{ordergoodsnum},#{ordername},#{allgoodsid},#{orderpic})
+        ]]>
+    </insert>
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="orderforuserMap">
+        SELECT * FROM orderforuser
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orderforuser
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="orderpricesum" resultType="java.lang.Long">
+        SELECT sum(orderprice) FROM orderforuser WHERE shopid=#{shopid} AND ordertime = #{ordertime}
+    </select>
+
+
+    <select id="fukuansum" resultType="java.lang.Long">
+        SELECT sum(ordergoodsnum) FROM orderforuser WHERE shopid=#{shopid} AND orderstate="已完成"
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="countorderbytime" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orderforuser WHERE shopid=#{shopid} AND ordertime=#{ordertime}
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="orderforuserMap" parameterType="java.lang.Long">
+        SELECT * FROM orderforuser WHERE ordernumber=#{ordernumber}
+    </select>
+
+    <!-- 根据time查询订单 -->
+    <select id="getuserorderbytime" resultMap="orderforuserMap">
+        SELECT * FROM orderforuser WHERE ordertime LIKE #{ordertime}
+    </select>
+
+    <!-- 根据fid查询all订单 -->
+    <select id="getalluserorderbyuid" resultMap="orderforuserMap" parameterType="java.lang.Long">
+        SELECT * FROM orderforuser WHERE userid=#{userid}
+    </select>
+
+    <!-- 根据订单归属ueser的id和商品的状态查询订单信息 -->
+    <select id="getuserorderbystate" resultMap="orderforuserMap">
+        SELECT * FROM orderforuser WHERE userid= #{userid} AND orderstate= #{orderstate}
+    </select>
+
+    <!-- 根据订单归属shop的id和商品的状态查询订单shu -->
+    <select id="countorder" resultType="java.lang.Long">
+        SELECT COUNT(orderstate) FROM orderforuser WHERE shopid= #{shopid} AND orderstate= #{orderstate}
+    </select>
+
+
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM orderforuser WHERE v_id=#{vid}
+        ]]>
+    </delete>
+
+    <!-- 修改对象信息 -->
+    <update id="update">
+        update orderforuser
+        <trim prefix="set" suffixOverrides=",">
+            <if test="vtitle!=null">v_title=#{vtitle},</if>
+            <if test="vdecripte!=null">v_decripte=#{vdecripte},</if>
+            <if test="vpicurl!=null">v_picurl=#{vpicurl},</if>
+        </trim>
+        <where>
+            v_id=#{vid}
+        </where>
+    </update>
+
+</mapper>

@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.KeepDao">
+    <resultMap id="keepMap" type="com.mall.bean.Keep">
+        <id property="keepid" column="keepid"/>
+        <result property="userid" column="userid"/>
+        <result property="goodsid" column="goodsid"/>
+        <result property="nowprice" column="nowprice"/>
+        <result property="gname" column="gname"/>
+        <result property="gdetail" column="gdetail"/>
+        <result property="gpic" column="gpic"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="keepMap">
+        SELECT * FROM keep
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM keep
+    </select>
+
+    <select id="getkeepbyuserid" resultMap="keepMap" parameterType="java.lang.Long">
+        SELECT * FROM keep WHERE userid=#{userid}
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="keepMap" parameterType="java.lang.Long">
+        SELECT * FROM keep WHERE userid=#{userid}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO keep (goodsid,userid,nowprice,gname,gdetail,gpic) VALUES (#{goodsid},#{userid},#{nowprice},#{gname},#{gdetail},#{gpic})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM keep WHERE keepid=#{id}
+        ]]>
+    </delete>
+
+    <!-- 修改对象信息 -->
+    <update id="update">
+        update keep
+        <trim prefix="set" suffixOverrides=",">
+            <if test="vtitle!=null">v_title=#{vtitle},</if>
+            <if test="vdecripte!=null">v_decripte=#{vdecripte},</if>
+            <if test="vpicurl!=null">v_picurl=#{vpicurl},</if>
+        </trim>
+        <where>
+            v_id=#{vid}
+        </where>
+    </update>
+
+</mapper>

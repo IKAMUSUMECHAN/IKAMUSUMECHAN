@@ -1,0 +1,66 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.LiuyanDao">
+    <resultMap id="liuyanMap" type="com.mall.bean.Liuyan">
+        <id property="liuyanid" column="liuyanid"/>
+        <result property="userid" column="userid"/>
+        <result property="liuyantext" column="liuyantext"/>
+        <result property="nickName" column="nickName"/>
+        <result property="headimg" column="headimg"/>
+        <result property="gid" column="gid"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="liuyanMap">
+        SELECT * FROM liuyan
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM liuyan
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="liuyanMap" parameterType="java.lang.Long">
+        SELECT * FROM liuyan WHERE userid=#{userid}
+    </select>
+
+
+    <select id="getliuyanbygid" resultMap="liuyanMap" parameterType="java.lang.Long">
+        SELECT * FROM liuyan WHERE gid=#{gid}
+    </select>
+
+
+    <select id="getliuyanbyuserid" resultMap="liuyanMap" parameterType="java.lang.Long">
+        SELECT * FROM liuyan WHERE userid=#{userid}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO liuyan (userid,liuyantext,nickName,headimg,gid) VALUES (#{userid},#{liuyantext},#{nickName},#{headimg},#{gid})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM liuyan WHERE liuyanid=#{id}
+        ]]>
+    </delete>
+
+    <!-- 修改对象信息 -->
+    <update id="update">
+        update liuyan
+        <trim prefix="set" suffixOverrides=",">
+            <if test="vtitle!=null">v_title=#{vtitle},</if>
+            <if test="vdecripte!=null">v_decripte=#{vdecripte},</if>
+            <if test="vpicurl!=null">v_picurl=#{vpicurl},</if>
+        </trim>
+        <where>
+            v_id=#{vid}
+        </where>
+    </update>
+
+</mapper>

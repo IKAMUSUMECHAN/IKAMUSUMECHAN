@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.SmallclassDao">
+    <resultMap id="smallclassMap" type="com.mall.bean.Smallclass">
+        <id property="smallclassid" column="smallclassid"/>
+        <result property="interfaceid" column="interfaceid"/>
+        <result property="smallclassname" column="smallclassname"/>
+        <result property="smallclasspir" column="smallclasspir"/>
+        <result property="smallclassdetail" column="smallclassdetail"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="smallclassMap">
+        SELECT * FROM smallclass
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM smallclass
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="smallclassMap" parameterType="java.lang.Long">
+        SELECT * FROM smallclass WHERE interfaceid=#{iid}
+    </select>
+
+
+    <!-- 根据id查询对象 -->
+    <select id="getsmallclassbygroup" resultMap="smallclassMap" parameterType="java.lang.Long">
+        SELECT * FROM smallclass WHERE interfaceid=#{iid}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO smallclass (vtitle,vdecripte,vpicurl) VALUES (#{vtitle},#{vdecripte},#{vpicurl})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM smallclass WHERE v_id=#{vid}
+        ]]>
+    </delete>
+
+    <!-- 修改对象信息 -->
+    <update id="update">
+        update smallclass
+        <trim prefix="set" suffixOverrides=",">
+            <if test="vtitle!=null">v_title=#{vtitle},</if>
+            <if test="vdecripte!=null">v_decripte=#{vdecripte},</if>
+            <if test="vpicurl!=null">v_picurl=#{vpicurl},</if>
+        </trim>
+        <where>
+            v_id=#{vid}
+        </where>
+    </update>
+
+</mapper>

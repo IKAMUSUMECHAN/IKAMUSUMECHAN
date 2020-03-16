@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.UseraddressDao">
+    <resultMap id="useraddressMap" type="com.mall.bean.Useraddress">
+        <id property="addressid" column="addressid"/>
+        <result property="userid" column="userid"/>
+        <result property="address" column="address"/>
+        <result property="userphonenum" column="userphonenum"/>
+        <result property="addressee" column="addressee"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="useraddressMap">
+        SELECT * FROM useraddress
+    </select>
+
+
+    <select id="getuseraddressbyid" resultMap="useraddressMap" parameterType="java.lang.Long">
+        SELECT * FROM useraddress WHERE userid=#{userid}
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM useraddress
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="useraddressMap" parameterType="java.lang.Long">
+        SELECT * FROM useraddress WHERE addressid=#{addressid}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO useraddress (userid,address,userphonenum,addressee) VALUES (#{userid},#{address},#{userphonenum},#{addressee})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM useraddress WHERE addressid=#{addressid}
+        ]]>
+    </delete>
+
+    <!-- 修改对象信息 -->
+    <update id="update">
+        update useraddress
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="address != null">address=#{address},</if>
+            <if test="userphonenum != null">userphonenum=#{userphonenum},</if>
+            <if test="addressee != null">addressee=#{addressee},</if>
+        </trim>
+        <where>
+            addressid=#{addressid}
+        </where>
+    </update>
+
+</mapper>

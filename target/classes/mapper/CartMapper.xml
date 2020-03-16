@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.CartDao">
+    <resultMap id="cartMap" type="com.mall.bean.Cart">
+        <id property="carid" column="carid"/>
+        <result property="userid" column="userid"/>
+        <result property="gid" column="gid"/>
+        <result property="nowprice" column="nowprice"/>
+        <result property="gname" column="gname"/>
+        <result property="gdetail" column="gdetail"/>
+        <result property="gpic" column="gpic"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="cartMap">
+        SELECT * FROM cart
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM cart
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="cartMap" parameterType="java.lang.Long">
+        SELECT * FROM cart WHERE v_id=#{vid}
+    </select>
+
+
+    <select id="getcartbyuserid" resultMap="cartMap" parameterType="java.lang.Long">
+        SELECT * FROM cart WHERE userid=#{userid}
+    </select>
+    <!-- 新增 -->
+    <insert id="save">
+        <![CDATA[
+          INSERT INTO cart (userid,gid,nowprice,gname,gdetail,gpic) VALUES (#{userid},#{gid},#{nowprice},#{gname},#{gdetail},#{gpic})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM cart WHERE carid=#{carid}
+        ]]>
+    </delete>
+
+    <!-- 修改对象信息 -->
+    <update id="update">
+        update cart
+        <trim prefix="set" suffixOverrides=",">
+            <if test="vtitle!=null">v_title=#{vtitle},</if>
+            <if test="vdecripte!=null">v_decripte=#{vdecripte},</if>
+            <if test="vpicurl!=null">v_picurl=#{vpicurl},</if>
+        </trim>
+        <where>
+            v_id=#{vid}
+        </where>
+    </update>
+
+</mapper>

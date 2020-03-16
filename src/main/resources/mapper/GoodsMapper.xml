@@ -1,0 +1,95 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.dao.GoodsDao">
+    <resultMap id="goodsMap" type="com.mall.bean.Goods">
+        <id property="gId" column="g_id"/>
+        <result property="sId" column="s_id"/>
+        <result property="fId" column="f_id"/>
+        <result property="gName" column="g_name"/>
+        <result property="gPicture" column="g_picture"/>
+        <result property="nowPrice" column="now_price"/>
+        <result property="oldPrice" column="old_price"/>
+        <result property="facturePrice" column="facture_price"/>
+        <result property="salesNum" column="sales_num"/>
+        <result property="gCateName" column="g_cate_name"/>
+        <result property="gCateId" column="g_cate_id"/>
+        <result property="gPingjia" column="g_pingjia"/>
+        <result property="goodsDetail" column="goods_detail"/>
+    </resultMap>
+
+    <!-- 遍历分类表 -->
+    <select id="listAll" resultMap="goodsMap">
+        SELECT * FROM goods
+    </select>
+
+    <!-- 获取表中总共有多少条数据 -->
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM goods
+    </select>
+
+    <!-- 根据id查询对象 -->
+    <select id="getById" resultMap="goodsMap" parameterType="java.lang.Long">
+        SELECT * FROM goods WHERE g_id=#{id}
+    </select>
+
+
+    <select id="getgoodsbysid" resultMap="goodsMap" parameterType="java.lang.Long">
+        SELECT * FROM goods WHERE s_id=#{sid}
+    </select>
+
+    <!-- 根据商铺id查询货物id -->
+    <select id="GetGoodsIdByShopId" resultMap="goodsMap" parameterType="java.lang.Long">
+        SELECT g_id FROM goods WHERE s_Id=#{sid}
+    </select>
+
+    <!-- 根据货物类id查询货物 -->
+    <select id="getgoodsbycateid" resultMap="goodsMap" parameterType="java.lang.Integer">
+        SELECT * FROM goods WHERE g_cate_id=#{gCateId}
+    </select>
+
+    <!-- 根据大类id查询货物 -->
+    <select id="getgoodsbybigclassid" resultMap="goodsMap" parameterType="java.lang.Long">
+        SELECT * FROM goods WHERE g_cate_id IN (SELECT smallclassid FROM smallclass  WHERE interfaceid=#{bigclassid})
+    </select>
+
+    <!-- 根据物品名id查询货物信息 -->
+    <select id="SearchGoodsByGoodsName" resultMap="goodsMap" parameterType="java.lang.String">
+        SELECT * FROM goods WHERE g_name like concat('%',#{name},'%')
+    </select>
+
+    <!-- gId,sId,fId,gName,gPicture,nowPrice,oldPrice,facturePrice,salesNum,gCateName,gCateId,gPingjia,goodsDetail新增 -->
+    <insert id="save">
+        <![CDATA[
+        INSERT INTO goods (s_id,f_id,g_name,g_picture,now_price,old_price,facture_price,sales_num,g_cate_name,g_cate_id,g_pingjia,goods_detail) VALUES (#{sId},#{fId},#{gName},#{gPicture},#{nowPrice},#{oldPrice},#{facturePrice},#{salesNum},#{gCateName},#{gCateId},#{gPingjia},#{goodsDetail})
+        ]]>
+    </insert>
+
+    <!-- 根据id删除数据 -->
+    <delete id="removeById" parameterType="java.lang.Long">
+        <![CDATA[
+          DELETE FROM goods WHERE g_id=#{id}
+        ]]>
+    </delete>
+
+    <update id="update">
+        update goods
+        <trim prefix="set" suffixOverrides=",">
+            <if test="sId!=null">s_id=#{sId},</if>
+            <if test="fId!=null">f_id=#{fId},</if>
+            <if test="gName!=null">g_name=#{gName},</if>
+            <if test="gPicture!=null">g_picture=#{gPicture},</if>
+            <if test="nowPrice!=null">=now_price#{nowPrice},</if>
+            <if test="oldPrice!=null">old_price=#{oldPrice},</if>
+            <if test="facturePrice!=null">facture_price=#{facturePrice},</if>
+            <if test="salesNum!=null">sales_num=#{salesNum},</if>
+            <if test="gCateName!=null">g_cate_name=#{gCateName},</if>
+            <if test="gCateId!=null">g_cate_id=#{gCateId},</if>
+            <if test="gPingjia!=null">g_pingjia=#{gPingjia},</if>
+            <if test="goodsDetail!=null">goods_detail=#{goodsDetail},</if>
+        </trim>
+        <where>
+            g_id=#{gId}
+        </where>
+    </update>
+</mapper>
